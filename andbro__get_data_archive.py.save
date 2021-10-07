@@ -1,0 +1,51 @@
+#!/bin/python
+
+import obspy
+
+#def __get_data_archive(component,resolution,beg,duration,raw=None):
+def __get_data_archive(component='Z', resolution='B', 
+	''' get data of ROMY for one component from archive 
+
+	__get_stream_data_archive(component,resolution,beg,duration)
+
+	component:  U, V, W, Z
+		resolution: B (=20Hz) or H (=200Hz)
+	beg:	    begin of time period
+	duration:   temporal length of period
+
+	>>> __get_stream_data_archive('Z', 'B', '2020-07-17 02:50', 3600)
+
+	'
+
+	## defining parameters
+	year = beg.year
+	day  = beg.julday
+	end  = beg + duration
+
+	## set station accordingly
+	if raw is not None or raw is True: 
+		station = 'DROMY'
+	else: 
+		station = 'ROMY'
+
+
+	## define local data path
+	path = "/import/freenas-ffb-01-data/romy_archive/{}/BW/{}/".format(str(year),station)
+
+
+
+	if component == 'Z':
+		name = '{0}J{1}.D/BW.{4}.10.{0}J{1}.D.{2}.{3}'.format(str(resolution),str(component),year,day,station)
+		st = obspy.read(path+name,starttime=beg,endtime=end)
+
+	elif component in {'U','V','W'}:
+		name = '{0}J{1}.D/BW.{4}..{0}J{1}.D.{2}.{3}'.format(str(resolution),str(component),year,day,station)
+		st = obspy.read(path+name,starttime=beg,endtime=end)
+
+	elif component in {'F1', 'F2'}:
+		#path = '/bay200/mseed_online/archive/2020/BW'
+		name = '{0}V.D/BW.{3}..{0}V.D.{1}.{2}'.format(str(component),year,day,station)
+		print(path+name)
+		st = obspy.read(path+name,starttime=beg,endtime=end)       
+
+	return st
