@@ -1,0 +1,16 @@
+from andbro__querrySeismoData import __querrySeismoData
+
+tbeg = UTCDateTime("2021-03-04 18:43")
+tend = UTCDateTime("2021-03-04 18:53")
+
+bjz, bjz_inv = __querrySeismoData(
+            seed_id="BW.ROMY.10.BJZ",
+            starttime=tbeg,
+            endtime=tend,
+            where="george",
+            path=None,
+            restitute=True,
+            detail=True,
+)
+
+bjz.filter("lowpass", freq=f_upper, corners=4, zerophase=True)

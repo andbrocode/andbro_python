@@ -1,0 +1,24 @@
+fig, ax = plt.subplots(2, 1, figsize=(15, 5))
+
+font = 14
+
+ax[0].plot()
+
+ax[1].plot()
+
+ax.set_ylabel("signal amplitude (V)", fontsize=font)
+
+ax.set_xlabel("time (min)", fontsize=font)
+
+ax.set_title(f"DC Offset Beam 1 and 2 (median = {round(med,2)} V)", fontsize=font+2)
+
+#ax.legend(fontsize=font)
+
+
+
+# fig.savefig(path2plots+"plot_dc_offset", 
+#             dpi=300, facecolor='w', edgecolor='w',
+#             orientation='portrait', format="png",
+#             transparent=False, bbox_inches="tight", pad_inches=0.2,
+#            )
+

@@ -1,0 +1,28 @@
+#!/usr/bin/python
+#
+# description
+#
+# by AndBro @2022
+# __________________________
+
+
+'''
+
+VARIABLES:
+ - seed_id:    code of seismic stations (e.g. "BW.ROMY..BJU")
+ - tstart:	    begin of time period
+ - tdelta:     temporal length of period
+
+DEPENDENCIES:
+ - import obspy
+
+OUTPUT:
+ - test
+ 
+EXAMPLE:
+>>> __get_stream_data_archive('BW.ROMY.10.BJZ', '2020-07-17 02:50', 3600, raw=False)
+
+'''
+
+
+## End of File
