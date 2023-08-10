@@ -12,7 +12,6 @@ def __load_wromy_stream(path_to_sds, seed_id, tbeg, tend):
 
     from os.path import exists
     from pandas import date_range, read_csv, concat, DataFrame
-    from tqdm.notebook import tqdm_notebook
     from obspy import Stream, UTCDateTime
     from numpy import nan, inf
     
@@ -43,7 +42,7 @@ def __load_wromy_stream(path_to_sds, seed_id, tbeg, tend):
     
     df = DataFrame()
     
-    for n, date in enumerate(tqdm_notebook(date_range(t1.date, t2.date))):    
+    for n, date in enumerate(date_range(t1.date, t2.date)):    
         doy = str(date.timetuple().tm_yday).rjust(3,"0")
         
 #        path = f"/import/freenas-ffb-01-data/romy_archive/{date.year}/{net}/{sta}/{cha}.D/"
