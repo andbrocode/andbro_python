@@ -88,7 +88,7 @@ def __load_furt_stream(config, show_raw=False, path_to_archive = '/bay200/gif_on
     ## declare empyt dataframe
     df = DataFrame()
     
-    for i, date in enumerate(tqdm_notebook(arange(config['tbeg'].date, (config['tend']+86410).date))):
+    for i, date in enumerate(arange(config['tbeg'].date, (config['tend']+86410).date)):
         
         date = UTCDateTime(str(date)).date
         filename = f'FURT.WSX.D.{str(date.day).rjust(2,"0")}{str(date.month).rjust(2,"0")}{str(date.year).rjust(2,"0")[-2:]}.0000'
