@@ -241,10 +241,13 @@ def __querrySeismoData(seed_id=None, starttime=None, endtime=None, repository=No
 
     if repository == 'archive':
 
-        path2sds = f"/import/freenas-ffb-01-data/romy_archive/"
+        if isdir("/import/freenas-ffb-01-data/romy_archive/"):
+            path2sds = f"/import/freenas-ffb-01-data/romy_archive/"
 
-        if not isdir(path2sds):
-            sys.exit(f"no such path: \n {path2sds}")
+        elif isdir("/home/andbro/freenas/romy_archive/"):
+            path2sds = f"/home/andbro/freenas/romy_archive/"
+        else:
+            sys.exit(f"path to archvie not found!")
 
 
         ## define SDS client
