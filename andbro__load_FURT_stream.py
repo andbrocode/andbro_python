@@ -94,7 +94,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
                 return
             else:
                 try:
-                    df0 = read_csv(path_to_archive+filename, usecols=[0,1,5,8,10,12,13,14], names=['date', 'time', 'Dm', 'Sm', 'T', 'H', 'P','Rc'])
+                    df0 = read_csv(path_to_archive+filename, header=0, usecols=[0,1,5,8,10,12,13,14], names=['date', 'time', 'Dm', 'Sm', 'T', 'H', 'P','Rc'])
                 except:
                     print(f" -> loading of {filename} failed!")
 
