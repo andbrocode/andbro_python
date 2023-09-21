@@ -36,7 +36,8 @@ def __fft(signal_in, dt ,window=None,normalize=None):
 		spectrum = fft( signal_in )
 
 	elif window == "hanning":
-		window = signal.hann(n); print('Hanning window applied \n')
+		window = signal.hann(n); 
+		#print('Hanning window applied \n')
 		spectrum = fft( signal_in * window )
 
 	elif window == "kaiser":
