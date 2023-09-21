@@ -12,10 +12,10 @@ def __load_wromy_stream(path_to_sds, seed_id, tbeg, tend):
 
     from os.path import exists
     from pandas import date_range, read_csv, concat, DataFrame
-    from tqdm.notebook import tqdm_notebook
     from obspy import Stream, UTCDateTime
     from numpy import nan, inf
-    
+    from numpy.ma import is_masked 
+
     def __add_trace(seed_id, ch, tbeg, dat):
 
         from obspy import Trace, UTCDateTime
@@ -35,15 +35,17 @@ def __load_wromy_stream(path_to_sds, seed_id, tbeg, tend):
 
         return tr
     
+    tbeg, tend = UTCDateTime(tbeg), UTCDateTime(tend)
     
-    t1 = tbeg
-    t2 = tend + 86410
+
+    t1 = UTCDateTime(tbeg)-1000
+    t2 = UTCDateTime(tend)+1000
     
     net, sta, loc, cha = seed_id.split(".")
     
     df = DataFrame()
     
-    for n, date in enumerate(tqdm_notebook(date_range(t1.date, t2.date))):    
+    for n, date in enumerate(date_range(t1.date, t2.date)):    
         doy = str(date.timetuple().tm_yday).rjust(3,"0")
         
 #        path = f"/import/freenas-ffb-01-data/romy_archive/{date.year}/{net}/{sta}/{cha}.D/"
@@ -94,14 +96,19 @@ def __load_wromy_stream(path_to_sds, seed_id, tbeg, tend):
     st0 += __add_trace(seed_id, "LAH", df_starttime, df['rel. Humidity (%)'])
         
         
-    st0.trim(tbeg, tend)
+    st0.trim(tbeg, tend-1)
     
     if len(st0) > 3:
         print(" -> split, interpolate, merge ...")
         st0.split().merge(fill_value="interpolate")
-
-    
-    print(f"Specified end: {tend} \nTrace end:     {st0.select(channel='LAT')[0].stats.endtime}")
+        
+    for tr in st0:
+        if is_masked(tr.data):
+            tr.data = tr.data.filled(fill_value=nan)
+        
+    tend1, tend2 = tend, st0.select(channel='LAT')[0].stats.endtime
+    if tend1 != tend2:
+        print(f"Specified end: {tend1} \nTrace end:     {tend2}")
     
     return st0
 
