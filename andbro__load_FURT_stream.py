@@ -1,5 +1,6 @@
 #!/bin/python3
 
+
 def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, path_to_archive = '/bay200/gif_online/FURT/WETTER/'):
 
     '''
@@ -85,66 +86,107 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
         date = UTCDateTime(str(date)).date
         filename = f'FURT.WSX.D.{str(date.day).rjust(2,"0")}{str(date.month).rjust(2,"0")}{str(date.year).rjust(2,"0")[-2:]}.0000'
 
-        # print(date)
+        if show_raw:
+            df0 = read_csv(path_to_archive+filename)
+            print(df0.columns.tolist())
 
         try:
-            if show_raw:
-                df0 = read_csv(path_to_archive+filename)
-                print(df0.columns.tolist())
-                return
-            else:
+            try:
                 try:
                     df0 = read_csv(path_to_archive+filename, header=0, usecols=[0,1,5,8,10,12,13,14], names=['date', 'time', 'Dm', 'Sm', 'T', 'H', 'P','Rc'])
                 except:
-                    print(f" -> loading of {filename} failed!")
+                    df0 = read_csv(path_to_archive+filename, usecols=[0,1,5,8,10,12,13,14], names=['date', 'time', 'Dm', 'Sm', 'T', 'H', 'P','Rc'])
+            except:
+                print(f" -> loading of {filename} failed!")
+
 
 
             ## substitute strings with floats
+
+            ## __________________________________________
             ## air temperature Ta in degree C
-            try:
-                df0['T']  = [float(str(str(t).split("=")[1]).split("C")[0]) for t in df0['T']]
-            except:
-                df0['T'] = ones(len(df0['T']))*nan
-                print(f" -> {filename}: subsituted T with nan...")
+            # try:
+                # df0['T']  = [float(str(str(t).split("=")[1]).split("C")[0]) for t in df0['T']]
+            # except:
+            #     df0['T'] = ones(len(df0['T']))*nan
+            #     print(f" -> {filename}: subsituted T with nan...")
 
+            TT = ones(len(df0['T']))*nan
+            for _n, t in enumerate(df0['T']):
+                try:
+                    TT[_n] = float(str(str(t).split("=")[1]).split("C")[0])
+                except:
+                    # print(t)
+                    continue
+            df0['T'] = TT
+
+            ## __________________________________________
             ## air pressure Pa in hPa
-            try:
-                df0['P']  = [float(str(str(p).split("=")[1]).split("H")[0]) for p in df0['P']]
-            except:
-                df0['P'] = ones(len(df0['P']))*nan
-                print(f" -> {filename}: subsituted P with nan...")
 
+            PP = ones(len(df0['P']))*nan
+            for _n, p in enumerate(df0['P']):
+                try:
+                    PP[_n] = float(str(str(p).split("=")[1]).split("H")[0])
+                except:
+                    # print(p)
+                    continue
+            df0['P'] = PP
+
+            ## __________________________________________
             # ## relative humiditiy Ua in %RH
-            try:
-                df0['H']  = [float(str(str(h).split("=")[1]).split("P")[0]) for h in df0['H']]
-            except:
-                df0['H'] = ones(len(df0['H']))*nan
-                print(f" -> {filename}: subsituted H with nan...")
 
+            HH = ones(len(df0['H']))*nan
+            for _n, h in enumerate(df0['H']):
+                try:
+                    HH[_n] = float(str(str(h).split("=")[1]).split("P")[0])
+                except:
+                    # print(h)
+                    continue
+            df0['H'] = HH
+
+            ## __________________________________________
             # ## rain accumulation in mm
-            try:
-                df0['Rc'] = [float(str(str(rc).split("=")[1]).split("M")[0]) for rc in df0['Rc']]
-            except:
-                df0['Rc'] = ones(len(df0['Rc']))*nan
-                print(f" -> {filename}: subsituted Rc with nan...")
 
+            Rc = ones(len(df0['Rc']))*nan
+            for _n, rc in enumerate(df0['Rc']):
+                try:
+                    Rc[_n] = float(str(str(rc).split("=")[1]).split("M")[0])
+                except:
+                    # print(rc)
+                    continue
+            df0['Rc'] = Rc
+
+            ## __________________________________________
             # ## wind speed average in m/s
-            try:
-                df0['Sm'] = [float(str(str(sm).split("=")[1]).split("M")[0]) for sm in df0['Sm']]
-            except:
-                df0['Sm'] = ones(len(df0['Sm']))*nan
-                print(f" -> {filename}: subsituted Sm with nan...")
 
+            Sm = ones(len(df0['Sm']))*nan
+            for _n, sm in enumerate(df0['Sm']):
+                try:
+                    Sm[_n] = float(str(str(sm).split("=")[1]).split("M")[0])
+                except:
+                    # print(sm)
+                    continue
+            df0['Sm'] = Sm
+
+            ## __________________________________________
             # ## wind direction average in degrees
-            try:
-                df0['Dm'] = [float(str(str(dm).split("=")[1]).split("D")[0]) for dm in df0['Dm']]
-            except:
-                df0['Dm'] = ones(len(df0['Dm']))*nan
-                print(f" -> {filename}: subsituted Dm with nan...")
+
+            Dm = ones(len(df0['Dm']))*nan
+            for _n, dm in enumerate(df0['Dm']):
+                try:
+                    Dm[_n] = float(str(str(dm).split("=")[1]).split("D")[0])
+                except:
+                    # print(dm)
+                    continue
+            df0['Dm'] = Dm
+
+
+            ## __________________________________________
 
             ## replace error indicating values (-9999, 999.9) with NaN values
 #             df0.replace(to_replace=-9999, value=nan, inplace=True)
 #             df0.replace(to_replace=999.9, value=nan, inplace=True)
+
 
             if df.empty:
                 df = df0
