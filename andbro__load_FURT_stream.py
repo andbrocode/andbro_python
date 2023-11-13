@@ -1,6 +1,5 @@
 #!/bin/python3
 
-
 def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, path_to_archive = '/bay200/gif_online/FURT/WETTER/'):
 
     '''
@@ -44,6 +43,12 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
 
     def __resample(df, freq='1S'):
 
+        ## check for NaN in dates
+        if df.date.isna().any():
+            print(" -> NaN values found and removed from column date")
+            df = df.dropna(axis=0, subset=["date"])
+            df["date"] = df["date"].astype(int)
+
         ## make column with datetime
         df['datetime'] = df['date'].astype(str).str.rjust(6,"0")+" "+df['time'].astype(str).str.rjust(6,"0")
 
@@ -51,7 +56,8 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
         df = df[df.duplicated("datetime", keep="first") != True]
 
         ## convert to pandas datetime object
-        df['datetime'] = to_datetime(df['datetime'], format="%d%m%y %H%M%S", errors="coerce")
+        # df['datetime'] = to_datetime(df['datetime'], format="%d%m%y %H%M%S", errors="coerce")
+        df['datetime'] = to_datetime(df['datetime'], format="%d%m%y %H%M%S", errors="ignore")
 
         ## set datetime column as index
         df.set_index('datetime', inplace=True)
@@ -203,10 +209,17 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
     ## reset the index for the joined frame
     df.reset_index(inplace=True, drop=True)
 
+    print(df.tail())
+
+    print()
+
+    print(df.tail())
 
     ## resample dataframe and avoid data gaps
-    df = __resample(df, freq=f'{new_delta}S')
-
+    try:
+        df = __resample(df, freq=f'{new_delta}S')
+    except Exception as e:
+        print(e)
 
     for text in output_text:
         print(text)
@@ -238,5 +251,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
     return st0
 
 ## END OF FILE
+
+
 
 

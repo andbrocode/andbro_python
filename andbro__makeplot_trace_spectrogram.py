@@ -86,11 +86,11 @@ def __makeplot_trace_spectrogram(tr, f_upper=None, spec_param=None, ylabel=None,
         Sxx /= abs(Sxx).max(axis=0)
         
     if unit in ['min', 'sec', 'hour', 'day']:
-        if unit is 'min':
+        if unit == 'min':
             scale=60
-        elif unit is 'hour':
+        elif unit == 'hour':
             scale=3600
-        elif unit is 'day':
+        elif unit == 'day':
             scale=86400
     else:
         scale=1
