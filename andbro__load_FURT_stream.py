@@ -209,11 +209,6 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
     ## reset the index for the joined frame
     df.reset_index(inplace=True, drop=True)
 
-    print(df.tail())
-
-    print()
-
-    print(df.tail())
 
     ## resample dataframe and avoid data gaps
     try:
