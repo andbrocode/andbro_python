@@ -80,8 +80,8 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
 
     if not Path(path_to_archive).exists():
         output_text.append(f"  -> Path: {path_to_archive}, does not exist!")
-#         print(f"  -> Path: {path_to_archive}, does not exists!")
-        return
+        print(f"  -> Path: {path_to_archive}, does not exists!")
+
 
 
     ## declare empyt dataframe
@@ -246,6 +246,7 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
     return st0
 
 ## END OF FILE
+
 
 
 
