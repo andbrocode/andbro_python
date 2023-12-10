@@ -47,8 +47,11 @@ def __load_furt_stream(starttime, endtime, show_raw=False, sampling_rate=1.0, pa
         if df.date.isna().any():
             print(" -> NaN values found and removed from column date")
             df = df.dropna(axis=0, subset=["date"])
-            df["date"] = df["date"].astype(int)
-
+            try:
+                df["date"] = df["date"].astype(int)
+            except:
+                df["date"] = df["Date"].astype(int)
+        
         ## make column with datetime
         df['datetime'] = df['date'].astype(str).str.rjust(6,"0")+" "+df['time'].astype(str).str.rjust(6,"0")
 
