@@ -25,7 +25,7 @@ def __trim_stream(st0, set_common=True, set_interpolate=False):
                 _tbeg = max([tr.stats.starttime for tr in st0])
                 _tend = min([tr.stats.endtime for tr in st0])
                 st0 = st0.trim(_tbeg, _tend, nearest_sample=True)
-                print(f"  -> adjusted: {__get_size(st)}")
+                print(f"  -> adjusted: {__get_size(st0)}")
 
                 if set_interpolate:
                     _times = arange(0, min(__get_size(st0)), st[0].stats.delta)
